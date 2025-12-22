@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khushi Tours & Travels | Legacy & Leadership</title>
+    <meta name="description" content="The legacy portfolio of Khushi Tours & Travels. Established 2002.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* * MASTER PALETTE & THEME VARIABLES
+         * Updated Palette:
+         * #0AF6F3 (Neon Cyan)
+         * #00BDBB (Rich Teal)
+         * #BFFCFA (Pale Cyan)
+         * #8C1A00 (Deep Copper/Red)
+         */
+        :root {
+            /* DAY MODE (Default) */
+            --bg-color: #f2fffe;
+            /* Ultra-light tint of #BFFCFA for main BG readability */
+            --bg-card: #BFFCFA;
+            /* The Palette Light Cyan */
+
+            --text-primary: #5c1100;
+            /* Darker version of #8C1A00 for text contrast */
+            --text-secondary: #005251;
+            /* Darker Teal for better readability */
+
+            --accent-main: #8C1A00;
+            /* The Palette Deep Red */
+            --highlight: #00BDBB;
+            /* The Palette Teal */
+            --glow: #0AF6F3;
+            /* The Palette Neon Cyan */
+
+            --card-glass: rgba(191, 252, 250, 0.6);
+            --border-color: rgba(0, 189, 187, 0.2);
+            --nav-glass: rgba(242, 255, 254, 0.95);
+
+            --map-filter: hue-rotate(150deg) contrast(0.9) opacity(0.8);
+            --shadow-soft: 0 15px 40px -10px rgba(140, 26, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* NIGHT MODE */
+            --bg-color: #051414;
+            /* Deep dark teal/black */
+            --bg-card: rgba(0, 189, 187, 0.08);
+
+            --text-primary: #BFFCFA;
+            /* Pale Cyan */
+            --text-secondary: #8aaeb0;
+            /* Muted Cyan */
+
+            --accent-main: #0AF6F3;
+            /* Neon Cyan takes lead in dark */
+            --highlight: #8C1A00;
+            /* Deep Red becomes accent */
+            --glow: #0AF6F3;
+
+            --card-glass: rgba(5, 20, 20, 0.8);
+            --border-color: rgba(10, 246, 243, 0.15);
+            --nav-glass: rgba(5, 20, 20, 0.95);
+
+            --map-filter: invert(1) grayscale(1) brightness(0.8) hue-rotate(180deg);
+            --shadow-soft: 0 15px 40px -10px rgba(10, 246, 243, 0.1);
+        }
+
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Manrope', sans-serif;
+            font-weight: 400;
+            line-height: 1.9;
+            transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s ease;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* LOADER */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .loader-wrapper {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+
+        /* Speedometer Arc */
+        .meter-arc {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 180px;
+            height: 90px;
+            border-radius: 90px 90px 0 0;
+            border: 2px solid rgba(0, 189, 187, 0.2);
+            border-bottom: 0;
+            box-sizing: border-box;
+        }
+
+        .meter-fill {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 180px;
+            height: 90px;
+            border-radius: 90px 90px 0 0;
+            border: 4px solid var(--accent-main);
+            border-bottom: 0;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            box-sizing: border-box;
+            transform-origin: bottom center;
+            transform: rotate(-180deg);
+            animation: fillMeter 2.5s ease forwards;
+        }
+
+        /* Car SVG */
+        .car-loader-svg {
+            width: 80px;
+            height: auto;
+            fill: none;
+            stroke: var(--accent-main);
+            stroke-width: 2;
+            z-index: 2;
+            margin-bottom: 10px;
+            animation: carBump 0.5s ease-in-out infinite alternate;
+        }
+
+        .loader-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-top: 25px;
+            opacity: 0;
+            animation: fadeInSimple 1s ease 0.5s forwards;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* FLOATING THEME TOGGLE (Replaces Navbar) */
+        .floating-theme-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background: var(--card-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .floating-theme-btn:hover {
+            border-color: var(--accent-main);
+            color: var(--accent-main);
+            background: var(--bg-card);
+        }
+
+        /* LAYOUT UTILS */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-padding {
+            padding: 9rem 0;
+        }
+
+        /* ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* HERO - CENTERED & REDESIGNED */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-bg-text {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: 25vw;
+            opacity: 0.04;
+            color: var(--accent-main);
+            white-space: nowrap;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.8rem, 9vw, 8rem);
+            line-height: 1.05;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 .highlight-text {
+            color: var(--accent-main);
+            font-style: italic;
+            display: block;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--accent-main);
+            letter-spacing: 0.01em;
+            font-weight: 500;
+        }
+
+        .est {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--accent-main);
+            margin-bottom: 2rem;
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            padding: 8px 24px;
+            border-radius: 50px;
+            background: var(--card-glass);
+            backdrop-filter: blur(5px);
+            font-weight: 600;
+        }
+
+        /* HERO CAR ANIMATION */
+        .hero-car-silhouette {
+            position: absolute;
+            bottom: 8%;
+            left: -300px;
+            width: 350px;
+            height: auto;
+            opacity: 0.06;
+            color: var(--accent-main);
+            pointer-events: none;
+            z-index: 1;
+            animation: driveAcross 20s linear infinite;
+        }
+
+        /* PHILOSOPHY */
+        .philosophy-text {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1.4;
+            color: var(--text-primary);
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .philosophy-highlight {
+            color: var(--accent-main);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* CORE VALUES */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .value-card {
+            background: var(--bg-card);
+            padding: 3rem;
+            border-left: 4px solid var(--accent-main);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-num {
+            font-size: 3.5rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--border-color);
+            opacity: 0.6;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-main);
+            font-weight: 600;
+        }
+
+        .value-card p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* CURATED SERVICES (NEW SECTION) */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .service-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .service-item h3 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .service-item p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+        }
+
+        /* NEW PROFILE STYLES (OVERLAP MAGAZINE DESIGN) */
+        .profile-modern-wrap {
+            margin-bottom: 10rem;
+        }
+
+        .profile-modern-card {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            position: relative;
+        }
+
+        .profile-modern-card.alt {
+            grid-template-columns: 1fr 1.2fr;
+        }
+
+        .pm-img-box {
+            height: 650px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .pm-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .profile-modern-card:hover .pm-img-box img {
+            transform: scale(1.05);
+        }
+
+        .pm-content-box {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 2;
+            margin-left: -100px;
+            /* Overlap effect */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .profile-modern-card.alt .pm-content-box {
+            margin-left: 0;
+            margin-right: -100px;
+            /* Overlap effect for alt */
+            order: -1;
+        }
+
+        @media (max-width: 900px) {
+
+            .profile-modern-card,
+            .profile-modern-card.alt {
+                grid-template-columns: 1fr;
+            }
+
+            .pm-content-box,
+            .profile-modern-card.alt .pm-content-box {
+                margin: -50px 20px 0 20px;
+                order: 2;
+            }
+
+            .pm-img-box {
+                height: 500px;
+            }
+        }
+
+        .pm-role {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--highlight);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pm-role::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--highlight);
+        }
+
+        .pm-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            color: var(--accent-main);
+            line-height: 1.1;
+        }
+
+        .pm-desc {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        /* MODERN TIMELINE */
+        .timeline-modern {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent-main), transparent);
+            opacity: 0.4;
+        }
+
+        .timeline-card {
+            position: relative;
+            margin-bottom: 4rem;
+            margin-left: 60px;
+            padding: 3rem;
+            background: var(--card-glass);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            border-radius: 0;
+            transition: all 0.4s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-soft);
+            border-left: 4px solid var(--accent-main);
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            left: -46px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--bg-color);
+            border: 3px solid var(--accent-main);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .timeline-card::after {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .t-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent-main);
+            line-height: 1;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .t-desc {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        /* PREMIUM FLEET CARDS */
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .fleet-card-premium {
+            background: var(--card-glass);
+            padding: 4rem 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fleet-card-premium:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-soft);
+            background: var(--bg-card);
+        }
+
+        .fleet-card-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: var(--accent-main);
+            transition: width 0.5s ease;
+        }
+
+        .fleet-card-premium:hover::before {
+            width: 100%;
+        }
+
+        .f-icon-box {
+            width: 70px;
+            height: 70px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            color: var(--accent-main);
+            font-size: 2rem;
+            transition: all 0.5s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .fleet-card-premium:hover .f-icon-box {
+            background: var(--accent-main);
+            color: #fff;
+            border-color: var(--accent-main);
+        }
+
+        .f-title {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            font-weight: 600;
+        }
+
+        .f-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ANIMATED STATS - 100% REDESIGN */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 7rem 0;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 5rem;
+            }
+        }
+
+        .stat-item h4 {
+            font-size: 6rem;
+            color: var(--accent-main);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        /* SPECIAL DESIGN FOR 100% STAT */
+        .stat-item.special-design {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-special-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .percent-symbol {
+            font-family: 'Playfair Display', serif;
+            font-size: 10rem;
+            /* Massive size */
+            color: var(--accent-main);
+            line-height: 0.8;
+            opacity: 1;
+        }
+
+        .hundred-text {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-color);
+            /* Masking effect */
+            padding: 5px;
+        }
+
+        .stat-item span.label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-top: 1rem;
+            display: block;
+        }
+
+        /* ATTRACTIVE CONTACT SECTION */
+        #contact {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 6rem 0;
+        }
+
+        .map-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            filter: var(--map-filter);
+            transition: filter 0.8s ease;
+        }
+
+        .map-background iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            pointer-events: all;
+        }
+
+        .contact-card-glass {
+            position: relative;
+            z-index: 2;
+            background: var(--card-glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 6rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 1000px;
+            width: 95%;
+            margin: 0 auto;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card-glass:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-card-glass {
+                padding: 4rem 2rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        .contact-info-block {
+            margin-bottom: 3rem;
+        }
+
+        .contact-label {
+            display: block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .contact-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .contact-value:hover {
+            color: var(--accent-main);
+        }
+
+        .contact-address {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-style: normal;
+            line-height: 1.6;
+        }
+
+        .directions-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding: 1.5rem 3.5rem;
+            background: var(--accent-main);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Manrope', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 1rem;
+            border: 1px solid var(--accent-main);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(140, 26, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .directions-btn:hover {
+            background: transparent;
+            color: var(--accent-main);
+            transform: translateX(5px);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            background: var(--bg-color);
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--accent-main);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .cyt-credit {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        /* KEYFRAMES */
+        @keyframes fillMeter {
+            0% {
+                transform: rotate(-180deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes carBump {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-2px);
+            }
+        }
+
+        @keyframes fadeInSimple {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes driveAcross {
+            0% {
+                transform: translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.15;
+            }
+
+            90% {
+                opacity: 0.15;
+            }
+
+            100% {
+                transform: translateX(calc(100vw + 300px));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADING SCREEN WITH CAR + METER ANIMATION -->
+    <div id="loader">
+        <div class="loader-wrapper">
+            <div class="meter-arc"></div>
+            <div class="meter-fill"></div>
+            <svg class="car-loader-svg" viewBox="0 0 100 40" preserveAspectRatio="xMidYMid meet">
+                <path
+                    d="M10,30 L10,25 C10,25 10,15 25,15 L40,15 L50,5 L75,5 L85,15 L95,18 L95,30 L85,30 A5,5 0 1,1 75,30 L30,30 A5,5 0 1,1 20,30 L10,30 Z M20,30 A5,5 0 1,0 30,30 M75,30 A5,5 0 1,0 85,30" />
+            </svg>
+        </div>
+        <div class="loader-text">Khushi Tours & Travels</div>
+    </div>
+
+    <!-- REMOVED NAVBAR, REPLACED WITH FLOATING TOGGLE -->
+    <button id="themeToggle" class="floating-theme-btn">Night Mode</button>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div class="hero-bg-text">K H U S H I</div>
+
+        <!-- Animated Moving Car Background -->
+        <svg class="hero-car-silhouette" viewBox="0 0 100 40" fill="currentColor">
+            <path
+                d="M10,30 L10,25 C10,25 10,15 25,15 L40,15 L50,5 L75,5 L85,15 L95,18 L95,30 L85,30 L75,30 L30,30 L20,30 L10,30 Z M25,30 A4,4 0 1,0 25,38 A4,4 0 1,0 25,30 Z M80,30 A4,4 0 1,0 80,38 A4,4 0 1,0 80,30 Z" />
+        </svg>
+
+        <div class="container">
+            <div class="hero-content reveal">
+                <span class="est">Est. 2002 • Hubballi</span>
+                <h1>Khushi Tours & Travels<br><span class="highlight-text"></span></h1>
+                <p>An owner-led portfolio of premium mobility and corporate travel excellence. Serving Hubballi's elite
+                    and Karnataka's corporate sector with distinction since 2002.</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- PHILOSOPHY -->
+    <section class="section-padding">
+        <div class="container reveal">
+            <p class="philosophy-text">
+                "True luxury is the absence of worry. Since 2002, we have curated journeys defined by <span
+                    class="philosophy-highlight">discretion, reliability, and silence</span>. We believe every mile
+                matters. We do not just move people; we uphold standards."
+            </p>
+        </div>
+    </section>
+
+    <!-- CORE VALUES -->
+    <section class="section-padding" style="background: var(--bg-card);">
+        <div class="container reveal">
+            <h2 style="margin-bottom: 2rem; text-align: center;">The Khushi Standard</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-num">01</div>
+                    <h3>Absolute Discretion</h3>
+                    <p>We understand that privacy is the ultimate luxury. Our chauffeurs are trained to be invisible yet
+                        attentive, ensuring confidential travel.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-num">02</div>
+                    <h3>Unwavering Punctuality</h3>
+                    <p>Time is the most valuable asset. Our logistics are planned to the minute, backed by real-time
+                        tracking, ensuring you are never waiting.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-num">03</div>
+                    <h3>Immaculate Presentation</h3>
+                    <p>From the mechanical perfection of our fleet to the professional attire of our staff, every detail
+                        reflects our commitment to excellence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURATED SERVICES (NEW SECTION) -->
+    <section class="section-padding">
+        <div class="container reveal">
+            <h2 style="margin-bottom: 4rem; text-align: center;">Curated Experiences</h2>
+            <div class="services-grid">
+                <div class="service-item">
+                    <h3>Corporate Mobility</h3>
+                    <p>Comprehensive transport solutions for executives, daily staff commutes, and VIP delegations. We
+                        manage the complexity so you can focus on business.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Event Logistics</h3>
+                    <p>Seamless coordination for weddings, large-scale conferences, and private events. We ensure your
+                        guests arrive in style and comfort, on schedule.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Outstation Journeys</h3>
+                    <p>Premium inter-city travel across Karnataka and beyond. Experience the freedom of the road with
+                        the comfort of a luxury suite.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOUNDER & CHAIRMAN - NEW OVERLAP DESIGN -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="profile-modern-wrap reveal">
+                <div class="profile-modern-card">
+                    <div class="pm-img-box">
+                        <img src="assets/images/maruti.jpg" alt="Maruti Somanatti">
+                    </div>
+                    <div class="pm-content-box">
+                        <span class="pm-role">Founder & Chairman</span>
+                        <h3 class="pm-name">Maruti Somanatti</h3>
+                        <p class="pm-desc">With a vision rooted in integrity, Maruti Somanatti established Khushi Tours
+                            & Travels to redefine what service means in Hubballi. His leadership style is quiet, firm,
+                            and relentlessly focused on the client's peace of mind.</p>
+                        <p class="pm-desc">His philosophy is simple: no compromise. For over two decades, he has been
+                            the guardian of our reputation, ensuring every journey meets a standard that goes beyond
+                            mere transportation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MANAGING DIRECTOR - NEW OVERLAP DESIGN (ALT) -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="profile-modern-wrap reveal">
+                <div class="profile-modern-card alt">
+                    <div class="pm-content-box">
+                        <span class="pm-role">Managing Director</span>
+                        <h3 class="pm-name">Bharat M. Somanatti</h3>
+                        <p class="pm-desc">Carrying the torch of legacy, Bharat Maruti Somanatti integrates modern
+                            logistics precision with traditional values of hospitality. He has pioneered the
+                            digitization of our fleet operations, ensuring efficiency without losing the personal touch.
+                        </p>
+                        <p class="pm-desc">Under his direction, the brand has evolved into a comprehensive mobility
+                            partner for Karnataka’s most prestigious corporations, blending innovation with tradition.
+                        </p>
+                    </div>
+                    <div class="pm-img-box">
+                        <img src="assets/images/bharat.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODERN TIMELINE -->
+    <section class="section-padding" style="background: var(--bg-card);">
+        <div class="container">
+            <div class="reveal">
+                <h2 style="margin-bottom: 4rem; text-align: center;">The Timeline</h2>
+                <div class="timeline-modern">
+                    <div class="timeline-card">
+                        <div class="t-year">2002</div>
+                        <div class="t-desc">Founded by Maruti Somanatti in Hubballi, beginning a journey of trust.</div>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="t-year">2010</div>
+                        <div class="t-desc">Expansion into dedicated corporate mobility solutions, securing key
+                            partnerships.</div>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="t-year">2018</div>
+                        <div class="t-desc">Acquisition of premium luxury coaches to serve larger groups with executive
+                            comfort.</div>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="t-year">2023</div>
+                        <div class="t-desc">Modernization of fleet technology and booking systems under Bharat
+                            Somanatti.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PREMIUM FLEET LEGACY - ADDED 4TH CARD -->
+    <section class="section-padding">
+        <div class="container">
+            <h2 style="margin-bottom: 4rem; text-align: center;" class="reveal">Fleet Capability</h2>
+            <div class="fleet-grid reveal">
+                <!-- Card 1 -->
+                <div class="fleet-card-premium">
+                    <div class="f-icon-box">◆</div>
+                    <h3 class="f-title">Executive Sedans</h3>
+                    <p class="f-desc">Discreet, immaculate vehicles designed for leadership transport, ensuring privacy
+                        and comfort. Perfect for airport transfers and client meetings.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="fleet-card-premium">
+                    <div class="f-icon-box">◆</div>
+                    <h3 class="f-title">Luxury MPVs</h3>
+                    <p class="f-desc">Spacious and versatile vehicles like the Innova Crysta, offering premium comfort
+                        for families and executive teams on the move.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="fleet-card-premium">
+                    <div class="f-icon-box">◆</div>
+                    <h3 class="f-title">Luxury Coaches</h3>
+                    <p class="f-desc">Long-distance endurance meets passenger comfort. Engineered for seamless travel
+                        across Karnataka with reclining seats and climate control.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="fleet-card-premium">
+                    <div class="f-icon-box">◆</div>
+                    <h3 class="f-title">Corporate Shuttles</h3>
+                    <p class="f-desc">Reliable logistics for large-scale team mobility. Precision scheduling and
+                        efficient route planning for employee transportation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANIMATED TRUST STATS - 100% REDESIGN -->
+    <section class="section-padding">
+        <div class="container reveal">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4 class="counter" data-target="22">0</h4>
+                    <span class="label">Years Legacy</span>
+                </div>
+                <div class="stat-item">
+                    <h4 class="counter" data-target="500">0</h4>
+                    <span class="label">Corporate Partners</span>
+                </div>
+                <!-- Redesigned 100% Section -->
+                <div class="stat-item special-design">
+                    <div class="stat-special-inner">
+                        <div class="hundred-text">
+                            <span class="counter" data-target="100">0</span>
+                            <span style="font-size: 1.5rem; margin-top: -5px;">+</span>
+                        </div>
+                        <div class="percent-symbol">%</div>
+                    </div>
+                    <span class="label">Safety Record</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT (ATTRACTIVE GLASS CARD WITH MAP) -->
+    <section id="contact">
+        <!-- Map Background -->
+        <div class="map-background">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3847.4098437317975!2d75.13655507389579!3d15.354274458183294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb8d744a9b42707%3A0xe92f7807bda2cc47!2sKHUSHI%20TOURS%20AND%20TRAVELS!5e0!3m2!1sen!2sin!4v1765778567159!5m2!1sen!2sin"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <!-- Glass Overlay Content -->
+        <div class="container reveal">
+            <div class="contact-card-glass">
+                <h2 style="margin-bottom: 3rem; color: var(--text-primary);">Get in Touch</h2>
+                <div class="contact-grid">
+                    <div>
+                        <div class="contact-info-block">
+                            <span class="contact-label">Office Address</span>
+                            <address class="contact-address">
+                                Bharat Diary Building, T. B. Road,<br>
+                                Deshpande Nagar, Hubballi – 580029,<br>
+                                Karnataka, India
+                            </address>
+                            <!-- Directions Button -->
+                            <a href="https://maps.app.goo.gl/6SaGDn3QCWgi15wG9" target="_blank" class="directions-btn">
+                                Open in Maps
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="contact-info-block">
+                            <span class="contact-label">Direct Lines</span>
+                            <div class="contact-value">+91 99455 99193</div>
+                            <div class="contact-value">+91 99641 99193</div>
+                            <div class="contact-value" style="font-size: 1.3rem; margin-top: 10px;">0836 2355192</div>
+                        </div>
+                        <div class="contact-info-block">
+                            <span class="contact-label">Electronic Mail</span>
+                            <div class="contact-value" style="font-size: 1.6rem;">info@kushitravels.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLOSING STATEMENT -->
+    <section class="section-padding" style="text-align: center;">
+        <div class="container reveal">
+            <h2 style="font-size: 2.8rem;">"Excellence in motion. Legacy in service."</h2>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <span class="footer-logo">Khushi Tours & Travels</span>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. LOADER LOGIC ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                initAnimations();
+            }, 2500);
+        });
+
+        // --- 2. THEME TOGGLE LOGIC ---
+        const toggleBtn = document.getElementById('themeToggle');
+        const body = document.body;
+
+        const savedTheme = localStorage.getItem('khushi-theme');
+        if (savedTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            toggleBtn.textContent = 'Day Mode';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('khushi-theme', 'light');
+                toggleBtn.textContent = 'Night Mode';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('khushi-theme', 'dark');
+                toggleBtn.textContent = 'Day Mode';
+            }
+        });
+
+        // --- 3. ANIMATIONS & STATS ---
+        function initAnimations() {
+            const observerOptions = { threshold: 0.15 };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Trigger stats if visible
+                        const counters = entry.target.querySelectorAll('.counter');
+                        if (counters.length > 0) {
+                            counters.forEach(counter => {
+                                const target = +counter.getAttribute('data-target');
+                                const duration = 2000; // 2 seconds
+                                const increment = target / (duration / 16);
+
+                                let current = 0;
+                                const updateCounter = () => {
+                                    current += increment;
+                                    if (current < target) {
+                                        counter.innerText = Math.ceil(current);
+                                        requestAnimationFrame(updateCounter);
+                                    } else {
+                                        counter.innerText = target;
+                                    }
+                                };
+                                updateCounter();
+                            });
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const elements = document.querySelectorAll('.reveal');
+            elements.forEach(el => observer.observe(el));
+        }
+    </script>
+</body>
+
+</html>
